@@ -8,6 +8,7 @@
 
 var cashIn = process.argv[2];
 var totalIn = {cash: cashIn, empties: 0, caps: 0};
+
 /*
   Function name: getBottles
   Input: one array of three numbers
@@ -20,30 +21,45 @@ var totalIn = {cash: cashIn, empties: 0, caps: 0};
 */
 
 var getBottles = function(credit) {
-  var bottles = 0;
-  var empties = credit.empties;
-  var caps = credit.caps;
+  var bottles = {};
+  bottles.bought = 0;
+  bottles.fromEmpties = 0;
+  bottles.fromCaps = 0;
+
+  empties = credit.empties;
+  caps = credit.caps;
 
   if (credit.cash >= 2) {
-    bottles += parseInt(credit.cash / 2);
+    bottles.bought += parseInt(credit.cash / 2);
   }
   if (credit.empties >= 2) {
-    bottles += parseInt(credit.empties / 2);
+    bottles.fromEmpties += parseInt(credit.empties / 2);
     empties = credit.empties % 2;
   }
   if (credit.caps >= 4) {
-    bottles += parseInt(credit.caps / 4);
+    bottles.fromCaps += parseInt(credit.caps / 4);
     caps = credit.caps % 4;
   }
 
-  empties += bottles;
-  caps += bottles;
+  var newBottles = bottles.bought + bottles.fromEmpties + bottles.fromCaps;
+
+  empties += newBottles;
+  caps += newBottles;
 
   if (empties >= 2 || caps >= 4) {
-    bottles += getBottles({cash: 0, empties: empties, caps: caps});
+    var recycle = getBottles({cash: 0, empties: empties, caps: caps});
+    for (var key in bottles) {
+      bottles[key] += recycle[key];
+    }
   }
 
   return bottles;
 };
 
-console.log(getBottles(totalIn));
+var totalOut = getBottles(totalIn);
+var totalBottles = totalOut.bought + totalOut.fromEmpties + totalOut.fromCaps;
+
+var message = 'Total bottles: ' + totalBottles + '\nTotal Earned:\n  Bottles: ' +
+              totalOut.fromEmpties + '\n  Caps: ' + totalOut.fromCaps;
+
+console.log(message);
