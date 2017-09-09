@@ -59,7 +59,8 @@ var getBottles = function(credit) {
 var totalOut = getBottles(totalIn);
 var totalBottles = totalOut.bought + totalOut.fromEmpties + totalOut.fromCaps;
 
-var message = 'Total bottles: ' + totalBottles + '\nTotal Earned:\n  Bottles: ' +
+var message = 'Total Bottles: ' + totalBottles + '\nRemaining Bottles: ' + (totalBottles % 2) +
+              '\nRemaining Caps: ' + (totalBottles % 4) + '\nTotal Earned:\n  Bottles: ' +
               totalOut.fromEmpties + '\n  Caps: ' + totalOut.fromCaps;
 
 console.log(message);
